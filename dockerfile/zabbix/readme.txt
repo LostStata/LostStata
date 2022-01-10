@@ -95,6 +95,6 @@ apt install zabbix-agent
 service zabbix-agent start
 netstat -ntpl | grep zabbix
 
-9配置 agent
+9、配置 agent
 Server=192.168.20.0/24 允许来自该网域的管理连接
 Hostname=Zabbix server
