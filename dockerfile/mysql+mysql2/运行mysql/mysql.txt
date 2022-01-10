@@ -1,0 +1,6 @@
+
+docker  pull  mysql:5.7
+
+mkdir -p /data/mysql/data
+
+docker run -p 3307:3306  --restart=always  --name mysql  -v /data/mysql/data/:/var/lib/mysql  -e MYSQL_ROOT_PASSWORD=192412Wei -d mysql:5.7

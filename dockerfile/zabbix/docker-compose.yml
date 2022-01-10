@@ -1,0 +1,68 @@
+version: '3.5'
+services:
+
+  mysql: 
+    image: mysql:5.7
+    container_name: zabbix-mysql
+    restart: unless-stopped
+    ports:
+      - 53306:3306
+    command: [
+      '--default-time-zone=+8:00'
+    ]
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_DATABASE: zabbix
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: mypassword
+      MYSQL_ROOT_PASSWORD: mypassword
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ./mysql/data:/var/lib/mysql
+    networks: 
+      - zabbix
+
+  zabbix-server:
+    image: zabbix/zabbix-server-mysql:alpine-4.4-latest
+    container_name: zabbix-server
+    restart: unless-stopped
+    ports:
+      - 10051:10051
+    depends_on:
+      - mysql
+    environment:
+      DB_SERVER_HOST: mysql
+      MYSQL_DATABASE: zabbix
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: mypassword
+      MYSQL_ROOT_PASSWORD: mypassword
+    networks: 
+      - zabbix
+
+  zabbix-web:
+    image: zabbix/zabbix-web-nginx-mysql:alpine-4.4-latest
+    container_name: zabbix-web
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    depends_on:
+      - zabbix-server
+      - mysql
+    environment:
+      PHP_TZ: Asia/Shanghai
+      DB_SERVER_HOST: mysql
+      MYSQL_DATABASE: zabbix
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: mypassword
+      MYSQL_ROOT_PASSWORD: mypassword
+    volumes:
+      - ./fonts:/usr/share/zabbix/assets/fonts
+    networks: 
+      - zabbix
+
+networks: 
+  zabbix:
+    driver: bridge
+    ipam:
+      config:
+        - subnet:  192.168.20.0/24

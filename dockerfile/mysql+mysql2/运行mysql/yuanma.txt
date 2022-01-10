@@ -1,0 +1,105 @@
+#!/usr/bin/bash
+
+echo '清理mariadb环境'
+yum erase mariadb mariadb-server mariadb-libs mariadb-devel -y  &> /dev/null
+
+echo '创建新的mysql用户'
+userdel -r mysql
+useradd -r mysql -M -s /bin/false
+
+echo '下载mysql'
+yum  -y  install  wget &> /dev/null
+wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-boost-5.7.27.tar.gz &> /dev/null
+if [ $? -eq 0 ]; then
+     echo "mysql-boot下载成功"  >> /root/init.log
+else
+     echo "mysql-boot下载失败"  >> /root/init.log
+fi
+
+
+echo '安装mysql所需的环境'
+yum -y install ncurses ncurses-devel openssl-devel bison gcc gcc-c++ make cmake &> /dev/null
+
+echo '创建所需的目录'
+mkdir -p /usr/local/{data,mysql,log}
+
+echo '解压mysql程序'
+tar xzvf mysql-boost-5.7.27.tar.gz -C /usr/local/ &> /dev/null
+
+echo '预编译'
+cd /usr/local/mysql-5.7.27/
+cmake . \
+-DWITH_BOOST=boost/boost_1_59_0/ \
+-DCMAKE_INSTALL_PREFIX=/usr/local/mysql \
+-DSYSCONFDIR=/etc \
+-DMYSQL_DATADIR=/usr/local/mysql/data \
+-DINSTALL_MANDIR=/usr/share/man \
+-DMYSQL_TCP_PORT=3306 \
+-DMYSQL_UNIX_ADDR=/tmp/mysql.sock \
+-DDEFAULT_CHARSET=utf8 \
+-DEXTRA_CHARSETS=all \
+-DDEFAULT_COLLATION=utf8_general_ci \
+-DWITH_READLINE=1 \
+-DWITH_SSL=system \
+-DWITH_EMBEDDED_SERVER=1 \
+-DENABLED_LOCAL_INFILE=1 \
+-DWITH_INNOBASE_STORAGE_ENGINE=1
+if [ $? -eq 0 ]; then
+     echo "mysql预编译完成"  >> /root/init.log
+else
+     echo "mysql预编译失败"  >> /root/init.log
+fi
+
+echo '编译与安装'
+make && make install
+if [ $? -eq 0 ]; then
+     echo "编译与安装完成"  >> /root/init.log
+else
+     echo "编译与安装失败"  >> /root/init.log
+fi
+
+echo '初始化mysql，保存文件在root下的init.log中'
+cd /usr/local/mysql
+chown -R mysql.mysql .
+ ./bin/mysqld --initialize --user=mysql --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data  >> /root/init.log
+if [ $? -eq 0 ]; then
+     echo "初始化成功"  >> /root/init.log
+else
+     echo "初始化失败"  >> /root/init.log
+fi
+
+echo "配置mysql配置文件"
+cat >/etc/my.cnf<<EOF
+[mysqld]
+basedir=/usr/local/mysql
+datadir=/usr/local/mysql/data
+EOF
+
+echo "配置环境变量"
+echo  'PATH=$PATH:$HOME/bin:/usr/local/mysql/bin' > /etc/profile
+source /etc/profile
+
+echo "配置mysql管理工具,并开机自启"
+cd /usr/local/mysql/support-files/
+cp mysql.server /etc/init.d/mysqld
+chkconfig --add mysqld
+chkconfig mysqld on
+
+echo "启动mysql"
+/etc/init.d/mysqld start
+
+echo "查看端口"
+yum  -y  install  net-tools
+netstat  -lntp  |  grep  mysql   >>  /root/init.log
+
+echo "关闭mysql"
+/etc/init.d/mysqld stop
+
+
+
+
+
+
+
+
+
