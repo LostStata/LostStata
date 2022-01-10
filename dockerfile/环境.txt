@@ -1,16 +1,28 @@
 #tomcat
-wget https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.73/bin/apache-tomcat-8.5.73.tar.gz
+wget https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.73/bin/apache-tomcat-8.5.73.tar.gz -P /opt/
+tar -xf /opt/apache-tomcat-8.5.73.tar.gz -C /usr/local/
+mv /usr/local/apache-tomcat-8.5.73 /usr/local/tomcat
+
+
 
 #jdk环境安装
 wget  https://repo.huaweicloud.com/java/jdk/8u181-b13/jdk-8u181-linux-x64.tar.gz -P /opt/
 tar -xf  /opt/jdk-8u181-linux-x64.tar.gz -C /usr/local/
-mv /usr/local/jdk1.8.0_181/  java
+mv /usr/local/jdk1.8.0_181/  /usr/local/java
 echo -e 'JAVA_HOME=/usr/local/java \nPATH=$JAVA_HOME/bin:$PATH \nCLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar'  >> /etc/profile
 source /etc/profile
 
 #maven环境安装
 wget https://dlcdn.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz -P /opt/
 tar -xf  /opt/apache-maven-3.8.4-bin.tar.gz -C /usr/local/
-mv /usr/local/apache-maven-3.8.4/ maven
+mv /usr/local/apache-maven-3.8.4/ /usr/local/maven
 echo -e 'MAVEN_HOME=/usr/local/maven/ \nPATH=$MAVEN_HOME/bin:$PATH' >> /etc/profile
 source /etc/profile
+
+#jenkins
+wget https://mirrors.tuna.tsinghua.edu.cn/jenkins/war/2.328/jenkins.war
+
+
+
+
+
