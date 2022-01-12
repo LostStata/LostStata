@@ -1,0 +1,1 @@
+wget https://get.jenkins.io/war-stable/2.319.1/jenkins.war --no-check-certificate
