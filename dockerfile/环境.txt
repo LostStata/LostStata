@@ -20,9 +20,11 @@ echo -e 'MAVEN_HOME=/usr/local/maven/ \nPATH=$MAVEN_HOME/bin:$PATH' >> /etc/prof
 source /etc/profile
 
 #jenkins
-wget https://mirrors.tuna.tsinghua.edu.cn/jenkins/war/2.328/jenkins.war
+插件无法下载
+wget https://mirrors.tuna.tsinghua.edu.cn/jenkins/war/2.328/jenkins.war --no-check-certificate
+wget https://get.jenkins.io/war-stable/2.319.1/jenkins.war --no-check-certificate
 
-
-
+下载这个版本的，配合d盘下的数据里面的plugins使用
+wget https://get.jenkins.io/war-stable/2.319.1/jenkins.war --no-check-certificate
 
 
