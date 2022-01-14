@@ -1,0 +1,10 @@
+82a6eb258ff946faa0ab5defb017c4e8
+
+
+
+[root@localhost ~]# find / -name "default.json"  
+/var/lib/jenkins/updates/default.json
+[root@localhost ~]# sed -i 's/http:\/\/updates.jenkins-ci.org\/download/https:\/\/mirrors.tuna.tsinghua.edu.cn\/jenkins/g' /root/.jenkins/updates/default.json && sed -i 's/http:\/\/www.google.com/https:\/\/www.baidu.com/g' /root/.jenkins/updates/default.json
+[root@localhost ~]# systemctl restart jenkins
+
+/root/.jenkins/updates/default.json
