@@ -76,7 +76,7 @@ datadir=/usr/local/mysql/data
 EOF
 
 echo "配置环境变量"
-echo  'PATH=$PATH:$HOME/bin:/usr/local/mysql/bin' > /etc/profile
+echo  'PATH=$PATH:$HOME/bin:/usr/local/mysql/bin' >> /etc/profile
 source /etc/profile
 
 echo "配置mysql管理工具,并开机自启"
