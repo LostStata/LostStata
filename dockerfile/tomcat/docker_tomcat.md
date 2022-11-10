@@ -6,16 +6,16 @@ wget https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.73/bin/apache-tomcat-8.5.73.t
 wget  https://repo.huaweicloud.com/java/jdk/8u181-b13/jdk-8u181-linux-x64.tar.gz
 ```
 
-##### **2、编写完dockerfile后创建所需的镜像**
+##### **2、编写dockerfile后创建所需的镜像**
 
-docker build -t tomcat:8.5 .
+``` shell
+docker build -t tomcat:8.5.1 .
+```
 
 ##### **3、创建需要挂载的目录**
 
 ```
-mkdir -p /data/tomcat/tomcat01/{conf,webapps}
-mkdir -p /data/tomcat/tomcat02/{conf,webapps}
-mkdir -p /data/tomcat/tomcat03/{conf,webapps}
+mkdir -p /data/tomcat/{tomcat01,tomcat02,tomcat03}/{conf,webapps}
 ```
 
 ##### **4、将源文件复制到tomcat01、tomcat02、tomcat03下的挂载目录**
